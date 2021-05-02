@@ -1,11 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {fstore} from './firebase';
 
 export default function App() {
+
+  const [msg, setMsg] = useState("");
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const doc = await fstore.collection("tests").doc("Yjo4Bp9FimYa2pnRrQUG").get();
+      setMsg(doc.data().message);
+  }
+  fetchData();
+  }, [])
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>Hot reloading rocks!</Text>
+      <Text>{msg}</Text>
       <StatusBar style="auto" />
     </View>
   );
