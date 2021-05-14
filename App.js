@@ -1,35 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import {fstore} from './firebase';
+import React from 'react';
+import { View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import UserProvider from './providers/UserProvider'
+import LoadingScreen from './screens/LoadingScreen'
+import LoginScreen from './screens/LoginScreen'
+import SignUpScreen from './screens/SignUpScreen'
+import HomeScreen from './screens/HomeScreen'
+
+
+const Stack = createStackNavigator();
+
 
 export default function App() {
 
-  const [msg, setMsg] = useState("");
-
-
-  useEffect(() => {
-    async function fetchData() {
-      const doc = await fstore.collection("tests").doc("Yjo4Bp9FimYa2pnRrQUG").get();
-      setMsg(doc.data().message);
-  }
-  fetchData();
-  }, [])
-
   return (
-    <View style={styles.container}>
-      <Text>Hot reloading rocks!</Text>
-      <Text>{msg}</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <UserProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+              screenOptions={{
+                  headerShown: false
+              }}>
+              <Stack.Screen name="Loading" component={LoadingScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Signup" component={SignUpScreen} />
+              <Stack.Screen name="Home" component={HomeScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserProvider>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
